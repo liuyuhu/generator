@@ -2,7 +2,6 @@ package com.generator.controller;
 
 import com.generator.common.entity.BaseController;
 import com.generator.common.entity.Page;
-import com.generator.common.utils.IDUtils;
 import com.generator.entity.GenScheme;
 import com.generator.service.GenSchemeService;
 import com.generator.service.GenTableService;
