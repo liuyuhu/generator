@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.generator.dao.GenSchemeDao">
+    
+    <sql id="genSchemeColumns">
+		a.id,
+		a.name,
+		a.category,
+		a.package_name as packageName,
+		a.module_name as moduleName,
+		a.sub_module_name as subModuleName,
+		a.function_name as functionName,
+		a.function_name_simple as functionNameSimple,
+		a.function_author as functionAuthor,
+		a.create_time as createTime,
+		a.update_time as updateTime,
+		a.valid,
+		a.gen_table_id AS "genTable.id"
+	</sql>
+	
+	<sql id="genSchemeJoins">
+		
+    </sql>
+    
+    <select id="get" resultType="com.generator.entity.GenScheme">
+		SELECT 
+			<include refid="genSchemeColumns"/>
+		FROM gen_scheme a
+		<include refid="genSchemeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="list" resultType="com.generator.entity.GenScheme">
+		SELECT 
+			<include refid="genSchemeColumns"/>
+		FROM gen_scheme a
+		<include refid="genSchemeJoins"/>
+		WHERE a.valid = 1
+		<if test="name != null and name != ''">
+			AND a.name LIKE concat('%',#{name},'%')
+		</if>
+		ORDER BY a.update_time DESC
+	</select>
+
+	<select id="listPage" resultType="com.generator.entity.GenScheme" parameterType="Page">
+		SELECT
+		<include refid="genSchemeColumns"/>
+		FROM gen_scheme a
+		<include refid="genSchemeJoins"/>
+		WHERE a.valid = 1
+		<if test="condition.name != null and condition.name != ''">
+			AND a.name LIKE concat('%',#{condition.name},'%')
+		</if>
+		ORDER BY a.update_time DESC
+	</select>
+	
+	<select id="listAll" resultType="com.generator.entity.GenScheme">
+		SELECT 
+			<include refid="genSchemeColumns"/>
+		FROM gen_scheme a
+		<include refid="genSchemeJoins"/>
+		WHERE a.valid = 1
+		ORDER BY a.update_time DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO gen_scheme(
+			id, 
+			name, 
+			category, 
+			package_name, 
+			module_name, 
+			sub_module_name, 
+			function_name, 
+			function_name_simple, 
+			function_author, 
+			gen_table_id, 
+			create_time,
+			update_time, 
+			valid
+		) VALUES (
+			#{id}, 
+			#{name}, 
+			#{category},  
+			#{packageName},  
+			#{moduleName},  
+			#{subModuleName},  
+			#{functionName},  
+			#{functionNameSimple},  
+			#{functionAuthor},  
+			#{genTable.id},  
+			#{createTime},
+			#{updateTime}, 
+			#{valid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gen_scheme SET 
+			name = #{name}, 
+			category = #{category},  
+			package_name = #{packageName},  
+			module_name = #{moduleName},  
+			sub_module_name = #{subModuleName},  
+			function_name = #{functionName},  
+			function_name_simple = #{functionNameSimple},  
+			function_author = #{functionAuthor},  
+			gen_table_id = #{genTable.id},  
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE gen_scheme SET 
+			valid = 0
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

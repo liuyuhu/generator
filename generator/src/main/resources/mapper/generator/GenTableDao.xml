@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.generator.dao.GenTableDao">
+    
+    <sql id="genTableColumns">
+		a.id,
+		a.name,
+		a.comments,
+		a.class_name as className,
+		a.parent_table as parentTable ,
+		a.parent_table_fk as parentTableFk,
+		a.create_time as createTime,
+		a.update_time as updateTime,
+		a.valid
+	</sql>
+	
+	<sql id="genTableJoins">
+		
+    </sql>
+    
+    <select id="get" resultType="com.generator.entity.GenTable">
+		SELECT 
+			<include refid="genTableColumns"/>
+		FROM gen_table a
+		<include refid="genTableJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="list" resultType="com.generator.entity.GenTable">
+		SELECT 
+			<include refid="genTableColumns"/>
+		FROM gen_table a
+		<include refid="genTableJoins"/>
+		WHERE a.valid = 1
+		<if test="name != null and name != ''">
+			AND a.name = #{name}
+		</if>
+		<if test="nameLike != null and nameLike != ''">
+			AND a.name LIKE concat('%',#{nameLike},'%')
+		</if>
+		<if test="comments != null and comments != ''">
+			AND a.comments LIKE concat('%',#{comments},'%')
+		</if>
+		<if test="parentTable != null and parentTable != ''">
+			AND a.parent_table = #{parentTable}
+		</if>
+	</select>
+
+	<select id="listPage" resultType="com.generator.entity.GenTable" parameterType="Page">
+		SELECT
+		<include refid="genTableColumns"/>
+		FROM gen_table a
+		<include refid="genTableJoins"/>
+		WHERE a.valid = 1
+		<if test="condition.name != null and condition.name != ''">
+			AND a.name = #{condition.name}
+		</if>
+		<if test="condition.nameLike != null and condition.nameLike != ''">
+			AND a.name LIKE concat('%',#{condition.nameLike},'%')
+		</if>
+		<if test="condition.comments != null and condition.comments != ''">
+			AND a.comments LIKE concat('%',#{condition.comments},'%')
+		</if>
+		<if test="condition.parentTable != null and condition.parentTable != ''">
+			AND a.parent_table = #{condition.parentTable}
+		</if>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.name ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="listAll" resultType="com.generator.entity.GenTable">
+		SELECT 
+			<include refid="genTableColumns"/>
+		FROM gen_table a
+		<include refid="genTableJoins"/>
+		WHERE a.valid = 1
+	</select>
+	
+	<insert id="save">
+		INSERT INTO gen_table(
+			id, 
+			name, 
+			comments, 
+			class_name, 
+			parent_table, 
+			parent_table_fk, 
+			create_time, 
+			update_time,
+			valid
+		) VALUES (
+			#{id}, 
+			#{name}, 
+			#{comments}, 
+			#{className}, 
+			#{parentTable}, 
+			#{parentTableFk}, 
+			#{createTime},
+			#{updateTime},
+			#{valid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gen_table SET <!-- 
+			name = #{name},  -->
+			comments = #{comments}, 
+			class_name = #{className}, 
+			parent_table = #{parentTable}, 
+			parent_table_fk = #{parentTableFk}, 
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE gen_table SET 
+			valid = 0
+		WHERE id = #{id}
+	</update>
+
+</mapper>

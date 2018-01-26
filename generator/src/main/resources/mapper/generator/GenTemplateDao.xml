@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.generator.dao.GenTemplateDao">
+    
+    <sql id="genTemplateColumns">
+		a.id,
+		a.name,
+		a.category,
+		a.file_path as filePath,
+		a.file_name as fileName,
+		a.content,
+		a.create_time as createTime,
+		a.update_time as updateTime,
+		a.valid
+	</sql>
+	
+	<sql id="genTemplateJoins">
+		
+    </sql>
+    
+    <select id="get" resultType="com.generator.entity.GenTemplate">
+		SELECT 
+			<include refid="genTemplateColumns"/>
+		FROM gen_template a
+		<include refid="genTemplateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="list" resultType="com.generator.entity.GenTemplate">
+		SELECT 
+			<include refid="genTemplateColumns"/>
+		FROM gen_template a
+		<include refid="genTemplateJoins"/>
+		WHERE a.valid = 1
+		<if test="name != null and name != ''">
+			AND a.name LIKE 
+				concat('%',#{name},'%')
+		</if>
+		<if test="category != null and category != ''">
+			AND a.category LIKE 
+				concat('%',#{category},'%')
+		</if>
+		ORDER BY a.name, a.update_date DESC
+	</select>
+
+	<select id="listPage" resultType="com.generator.entity.GenTemplate" parameterType="Page">
+		SELECT
+		<include refid="genTemplateColumns"/>
+		FROM gen_template a
+		<include refid="genTemplateJoins"/>
+		WHERE a.valid = 1
+		<if test="condition.name != null and condition.name != ''">
+			AND a.name LIKE
+			concat('%',#{condition.name},'%')
+		</if>
+		<if test="condition.category != null and condition.category != ''">
+			AND a.category LIKE
+			concat('%',#{condition.category},'%')
+		</if>
+		ORDER BY a.name, a.update_time DESC
+	</select>
+
+	<select id="listAll" resultType="com.generator.entity.GenTemplate">
+		SELECT 
+			<include refid="genTemplateColumns"/>
+		FROM gen_template a
+		<include refid="genTemplateJoins"/>
+		WHERE a.valid = 1
+		ORDER BY a.name, a.update_time DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO gen_template(
+			id, 
+			name, 
+			category, 
+			file_path, 
+			file_name, 
+			content, 
+			create_time,
+			update_time,
+			valid
+		) VALUES (
+			#{id}, 
+			#{name}, 
+			#{category},  
+			#{filePath},  
+			#{fileName},  
+			#{content},  
+			#{createTime},
+			#{updateTime},
+			#{valid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gen_template SET 
+			name = #{name}, 
+			category = #{category},  
+			file_path = #{filePath},  
+			file_name = #{fileName},  
+			content = #{content},  
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE gen_template SET 
+			valid = 0
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

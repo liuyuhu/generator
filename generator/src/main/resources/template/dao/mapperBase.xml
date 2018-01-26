@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<name>mapper</name>
+	<filePath>src/main/resources/mapper/${moduleName}/${subModuleName}/base</filePath>
+	<fileName>${ClassName}MapperBase.xml</fileName>
+	<content><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${packageName}.${moduleName}.dao<#if subModuleName != "">.${subModuleName}</#if>.${ClassName}Dao">
+
+	<select id="get" resultMap="BaseResultMap">
+		SELECT 
+			<include refid="Base_Column_List"/>
+		FROM ${table.name}
+		WHERE id = ${"#"}{id}
+	</select>
+	
+	<select id="list" resultMap="BaseResultMap">
+		SELECT 
+			<include refid="Base_Column_List"/>
+		FROM ${table.name} t
+		<where>
+			<#if table.delFlagExists>t.valid = 1</#if>
+			<#list table.columnList as c>
+				<#if (c.isQuery?? && c.isQuery == "1") || (table.parentExists && table.parentTableFk == c.name)>
+					<#if c.queryType ?? && c.queryType == 'between'>
+			<if test="begin${c.simpleJavaField?cap_first} != null and end${c.simpleJavaField?cap_first} != null <#if c.simpleJavaField != c.javaFieldId>and begin${c.javaFieldId?cap_first} != null and end${c.javaFieldId?cap_first} != null </#if>and begin${c.javaFieldId?cap_first} != '' and end${c.javaFieldId?cap_first} != ''">
+					<#else>
+			<if test="${c.simpleJavaField} != null<#if c.simpleJavaField != c.javaFieldId> and ${c.javaFieldId} != null</#if> and ${c.javaFieldId} != ''">
+					</#if>
+					<#if c.queryType ?? && c.queryType == 'between'>
+				AND t.${c.name} BETWEEN ${"#"}{begin${c.simpleJavaField?cap_first}} AND ${"#"}{end${c.simpleJavaField?cap_first}}
+					<#elseif c.queryType ?? && c.queryType == 'like'>
+				AND t.${c.name} LIKE
+					concat('%',${"#"}{${c.javaFieldId}},'%')
+					<#elseif c.queryType ?? && c.queryType == 'left_like'>
+				AND t.${c.name} LIKE
+					concat('%',${"#"}{${c.javaFieldId}})
+					<#elseif c.queryType ?? && c.queryType == 'right_like'>
+				AND t.${c.name} LIKE
+					concat(${"#"}{${c.javaFieldId}},'%')
+					<#else>
+				AND t.${c.name} ${c.queryType} ${"#"}{${c.javaFieldId}}
+					</#if>
+			</if>
+				</#if>
+			</#list>
+		</where>
+	</select>
+
+	<select id="listPage" resultMap="BaseResultMap" parameterType="Page">
+		SELECT
+			<include refid="Base_Column_List"/>
+		FROM ${table.name} t
+		<where>
+			<#if table.delFlagExists>t.valid = 1</#if>
+			<if test="condition != null">
+			<#list table.columnList as c>
+				<#if (c.isQuery?? && c.isQuery == "1") || (table.parentExists && table.parentTableFk == c.name)>
+					<#if c.queryType ?? && c.queryType == 'between'>
+			<if test="begin${c.simpleJavaField?cap_first} != null and end${c.simpleJavaField?cap_first} != null <#if c.simpleJavaField != c.javaFieldId>and begin${c.javaFieldId?cap_first} != null and end${c.javaFieldId?cap_first} != null </#if>and begin${c.javaFieldId?cap_first} != '' and end${c.javaFieldId?cap_first} != ''">
+					<#else>
+			<if test="condition.${c.simpleJavaField} != null<#if c.simpleJavaField != c.javaFieldId> and ${c.javaFieldId} != null</#if> and condition.${c.javaFieldId} != ''">
+					</#if>
+					<#if c.queryType ?? && c.queryType == 'between'>
+				AND t.${c.name} BETWEEN ${"#"}{begin${c.simpleJavaField?cap_first}} AND ${"#"}{end${c.simpleJavaField?cap_first}}
+					<#elseif c.queryType ?? && c.queryType == 'like'>
+				AND t.${c.name} LIKE
+					concat('%',${"#"}{condition.${c.javaFieldId}},'%')
+					<#elseif c.queryType ?? && c.queryType == 'left_like'>
+				AND t.${c.name} LIKE
+					concat('%',${"#"}{condition.${c.javaFieldId}})
+					<#elseif c.queryType ?? && c.queryType == 'right_like'>
+				AND t.${c.name} LIKE
+					concat(${"#"}{condition.${c.javaFieldId}},'%')
+					<#else>
+				AND t.${c.name} ${c.queryType} ${"#"}{condition.${c.javaFieldId}}
+					</#if>
+			</if>
+				</#if>
+			</#list>
+			</if>
+		</where>
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${"$"}{orderBy}
+			</when>
+			<otherwise>
+				<#if table.parentExists>
+					<#if table.createDateExists>
+				ORDER BY t.create_time ASC
+					</#if>
+				<#else>
+					<#if table.updateDateExists>
+				ORDER BY t.update_time DESC
+					</#if>
+				</#if>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="listAll" resultMap="BaseResultMap">
+		SELECT 
+			<include refid="Base_Column_List"/>
+		FROM ${table.name} t
+		<where>
+			<#if table.delFlagExists>t.valid = 1</#if>
+			<#list table.columnList as c>
+				<#if (c.isQuery?? && c.isQuery == "1") || (table.parentExists && table.parentTableFk == c.name)>
+					<#if c.queryType ?? && c.queryType == 'between'>
+			<if test="begin${c.simpleJavaField?cap_first} != null and end${c.simpleJavaField?cap_first} != null <#if c.simpleJavaField != c.javaFieldId>and begin${c.javaFieldId?cap_first} != null and end${c.javaFieldId?cap_first} != null </#if>and begin${c.javaFieldId?cap_first} != '' and end${c.javaFieldId?cap_first} != ''">
+					<#else>
+			<if test="${c.simpleJavaField} != null<#if c.simpleJavaField != c.javaFieldId> and ${c.javaFieldId} != null</#if> and ${c.javaFieldId} != ''">
+					</#if>
+					<#if c.queryType ?? && c.queryType == 'between'>
+				AND t.${c.name} BETWEEN ${"#"}{begin${c.simpleJavaField?cap_first}} AND ${"#"}{end${c.simpleJavaField?cap_first}}
+					<#elseif c.queryType ?? && c.queryType == 'like'>
+				AND t.${c.name} LIKE
+					concat('%',${"#"}{${c.javaFieldId}},'%')
+					<#elseif c.queryType ?? && c.queryType == 'left_like'>
+				AND t.${c.name} LIKE
+					concat('%',${"#"}{${c.javaFieldId}})
+					<#elseif c.queryType ?? && c.queryType == 'right_like'>
+				AND t.${c.name} LIKE
+					concat(${"#"}{${c.javaFieldId}},'%')
+					<#else>
+				AND t.${c.name} ${c.queryType} ${"#"}{${c.javaFieldId}}
+					</#if>
+			</if>
+				</#if>
+			</#list>
+		</where>
+	</select>
+	
+	<insert id="save">
+		INSERT INTO ${table.name}(
+		<#assign insertField>
+			<#list table.columnList as c>
+				<#if c.isInsert?? && c.isInsert == "1">
+			${c.name},
+				</#if>
+			</#list>
+		</#assign>
+${insertField?substring(0, insertField?last_index_of(","))}
+		) VALUES (
+		<#assign insertJavaField>
+			<#list table.columnList as c>
+				<#if c.isInsert?? && c.isInsert == "1">
+			${"#"}{${c.javaFieldId}},
+				</#if>
+			</#list>
+		</#assign>
+${insertJavaField?substring(0, insertJavaField?last_index_of(","))}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE ${table.name} SET 	
+				<#list table.columnList as c>
+					<#if c.isEdit?? && c.isEdit == "1">
+			<if test="${c.javaFieldId} != null">
+				${c.name} = ${"#"}{${c.javaFieldId}},
+			</if>
+					</#if>
+				</#list>
+		WHERE id = ${"#"}{id}
+	</update>
+
+	<#if table.delFlagExists>
+	<update id="deleteLogic">
+		UPDATE ${table.name} SET
+		valid = 0
+	</update>
+
+	</#if>
+	<delete id="delete">
+		DELETE FROM ${table.name}
+		WHERE id = ${"#"}{id}
+	</delete>
+
+</mapper>]]>
+	</content>
+</template>

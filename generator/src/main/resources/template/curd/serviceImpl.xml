@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<name>serviceImpl</name>
+	<filePath>src/main/java/${packageName}/${moduleName}/service/impl/${subModuleName}</filePath>
+	<fileName>${ClassName}ServiceImpl.java</fileName>
+	<content><![CDATA[
+package ${packageName}.${moduleName}.service.impl<#if subModuleName != "">.${subModuleName}</#if>;
+
+import com.generator.common.entity.BaseServiceImpl;
+import ${packageName}.${moduleName}.entity<#if subModuleName != "">.${subModuleName}</#if>.${ClassName};
+import ${packageName}.${moduleName}.dao<#if subModuleName != "">.${subModuleName}</#if>.${ClassName}Dao;
+import ${packageName}.${moduleName}.service<#if subModuleName != "">.${subModuleName}</#if>.${ClassName}Service;
+import org.springframework.stereotype.Service;
+
+/**
+ * ${functionName}ServiceImpl
+ * @author ${functionAuthor}
+ * @version ${functionVersion}
+ */
+
+@Service
+public class ${ClassName}ServiceImpl extends BaseServiceImpl<${ClassName}Dao, ${ClassName}> implements ${ClassName}Service {
+	
+}]]>
+    </content>
+</template>

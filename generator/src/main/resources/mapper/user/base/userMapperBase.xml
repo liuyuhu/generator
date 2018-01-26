@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"
+        [<!ENTITY chap1 SYSTEM "userMapperBase.xml">]>
+<mapper namespace="com.generator.dao.UserDao">
+
+    <select id="get" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_user
+        WHERE id = #{id}
+    </select>
+
+    <select id="list" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_user t
+        <where>
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                AND t.name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="age != null and age != ''">
+                AND t.age = #{age}
+            </if>
+        </where>
+    </select>
+
+    <select id="listPage" resultMap="BaseResultMap" parameterType="com.generator.common.entity.Page">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_user t
+        <where>
+            <if test="condition != null">
+                <if test="condition.id != null and condition.id != ''">
+                    AND t.id = #{condition.id}
+                </if>
+                <if test="condition.name != null and condition.name != ''">
+                    AND t.name LIKE concat('%',#{condition.name},'%')
+                </if>
+                <if test="condition.age != null and condition.age != ''">
+                    AND t.age = #{age}
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <select id="listAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_user t
+        <where>
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                AND t.name LIKE
+                concat('%',#{name},'%')
+            </if>
+            <if test="age != null and age != ''">
+                AND t.age = #{age}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save">
+        INSERT INTO t_user(
+        id,
+        name,
+        age
+        ) VALUES (
+        #{id},
+        #{name},
+        #{age}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_user SET
+        <if test="record.companyId != null">
+            name = #{name},
+        </if>
+        <if test="record.companyId != null">
+            age = #{age},
+        </if>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_user
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

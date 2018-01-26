@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.generator.dao.UserDao">
+
+    <resultMap id="BaseResultMap" type="com.generator.entity.User">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="age" property="age" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        name,
+        age
+    </sql>
+
+    <sql id="Base_Column_List_T">
+        t.id,
+        t.name,
+        t.age
+    </sql>
+
+    <select id="getByName" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_user
+        WHERE name = #{name}
+    </select>
+
+</mapper>
+
+
