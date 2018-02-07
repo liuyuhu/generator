@@ -1,5 +1,7 @@
 package com.generator.common.entity;
 
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**
@@ -17,7 +19,7 @@ public interface BaseDao<T> {
      * @param id
      * @return
      */
-    T get(String id);
+    T get(@Param("id") String id);
 
     /**
      * 获取多条数据
@@ -68,21 +70,13 @@ public interface BaseDao<T> {
     int updateAll(T entity);
 
     /**
-     * 删除数据（物理删除）
+     * 删除数据（物理删除 logic:false）
      *
      * @param id
+     * @param logic
      * @return
      * @see public int delete(T entity)
      */
-    @Deprecated
-    int delete(String id);
-
-    /**
-     * 删除数据（逻辑删除，更新valid字段为1）
-     *
-     * @param id
-     * @return
-     */
-    int deleteLogic(String id);
+    int delete(@Param("id") String id, @Param("logic") Boolean logic);
 
 }

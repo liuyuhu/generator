@@ -1,11 +1,9 @@
-package com.generator.interceptor;
+package com.generator.common.interceptor;
 
 import com.generator.common.entity.Page;
 import com.generator.common.utils.Reflections;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.ExecutorException;
-import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;

@@ -50,7 +50,7 @@
 	
 	 <!--插件配置-->
 	<plugins>
-		<plugin interceptor="com.generator.interceptor.PageInterceptor" />
+		<plugin interceptor="com.generator.common.interceptor.PageInterceptor" />
     </plugins>
 	
 </configuration>

@@ -2,11 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.generator.usertest.dao.UserTestDao">
 
+	<resultMap id="BaseResultMap" type="com.generator.usertest.entity.UserTest">
+		<id column="user_id" property="userId" />
+		<result column="user_name" property="userName" />
+		<result column="age" property="age" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="valid" property="valid" />
+  	</resultMap>
+
+	<sql id="Base_Column_List">
+		user_id,
+		user_name,
+		age,
+		create_time,
+		update_time,
+		valid
+	</sql>
+
 	<select id="get" resultMap="BaseResultMap">
 		SELECT 
 			<include refid="Base_Column_List"/>
 		FROM user_test
-		WHERE id = #{id}
+		WHERE user_id = #{id}
 	</select>
 	
 	<select id="list" resultMap="BaseResultMap">
@@ -15,8 +33,8 @@
 		FROM user_test t
 		<where>
 			t.valid = 1
-			<if test="id != null and id != ''">
-				AND t.id = #{id}
+			<if test="userId != null and userId != ''">
+				AND t.user_id = #{userId}
 			</if>
 			<if test="userName != null and userName != ''">
 				AND t.user_name LIKE
@@ -26,13 +44,7 @@
 				AND t.age = #{age}
 			</if>
 		</where>
-		<choose>
-			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
-				ORDER BY ${page.orderBy}
-			</when>
-			<otherwise>
-			</otherwise>
-		</choose>
+		ORDER BY t.create_time ASC
 	</select>
 
 	<select id="listPage" resultMap="BaseResultMap" parameterType="Page">
@@ -42,8 +54,8 @@
 		<where>
 			t.valid = 1
 			<if test="condition != null">
-			<if test="condition.id != null and condition.id != ''">
-				AND t.id = #{condition.id}
+			<if test="condition.userId != null and condition.userId != ''">
+				AND t.user_id = #{condition.userId}
 			</if>
 			<if test="condition.userName != null and condition.userName != ''">
 				AND t.user_name LIKE
@@ -59,39 +71,21 @@
 				ORDER BY ${orderBy}
 			</when>
 			<otherwise>
+				ORDER BY t.create_time ASC
 			</otherwise>
 		</choose>
 	</select>
 	
-	<select id="listAll" resultMap="BaseResultMap">
-		SELECT 
-			<include refid="Base_Column_List"/>
-		FROM user_test t
-		<where>
-			t.valid = 1
-			<if test="id != null and id != ''">
-				AND t.id = #{id}
-			</if>
-			<if test="userName != null and userName != ''">
-				AND t.user_name LIKE
-					concat('%',#{userName},'%')
-			</if>
-			<if test="age != null and age != ''">
-				AND t.age = #{age}
-			</if>
-		</where>
-	</select>
-	
 	<insert id="save">
 		INSERT INTO user_test(
-			id,
+			user_id,
 			user_name,
 			age,
 			create_time,
 			update_time,
 			valid
 		) VALUES (
-			#{id},
+			#{userId},
 			#{userName},
 			#{age},
 			#{createTime},
@@ -101,7 +95,8 @@
 	</insert>
 	
 	<update id="update">
-		UPDATE user_test SET 	
+		UPDATE user_test
+		<set>
 			<if test="userName != null">
 				user_name = #{userName},
 			</if>
@@ -117,17 +112,34 @@
 			<if test="valid != null">
 				valid = #{valid},
 			</if>
-		WHERE id = #{id}
+		</set>
+		WHERE user_id = #{userId}
 	</update>
 
-	<update id="deleteLogic">
-		UPDATE user_test SET
-		valid = 0
+	<update id="updateAll">
+		UPDATE user_test
+		<set>
+				user_name = #{userName},
+				age = #{age},
+				create_time = #{createTime},
+				update_time = #{updateTime},
+				valid = #{valid},
+		</set>
+		WHERE user_id = #{userId}
 	</update>
 
-	<delete id="delete">
-		DELETE FROM user_test
-		WHERE id = #{id}
+	<delete id="delete" parameterType="java.lang.Boolean">
+	<choose>
+		<when test="logic">
+			UPDATE user_test
+			SET valid = "0"
+			WHERE user_id = #{id}
+		</when>
+		<otherwise>
+			DELETE FROM user_test
+			WHERE user_id = #{id}
+		</otherwise>
+	</choose>
 	</delete>
 
 </mapper>

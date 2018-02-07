@@ -141,7 +141,7 @@ public class GenTable extends BaseEntity {
      */
     public Boolean getUpdateDateExists() {
         for (GenTableColumn c : columnList) {
-            if ("update_date".equals(c.getName())) {
+            if ("update_time".equals(c.getName())) {
                 return true;
             }
         }

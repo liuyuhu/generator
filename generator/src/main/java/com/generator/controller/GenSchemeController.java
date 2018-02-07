@@ -55,7 +55,7 @@ public class GenSchemeController extends BaseController {
         }
         model.addAttribute("genScheme", genScheme);
         model.addAttribute("config", GenUtils.getConfig());
-        model.addAttribute("tableList", genTableService.listAll(null));
+        model.addAttribute("tableList", genTableService.list(null));
         return "modules/gen/genSchemeForm";
     }
 
@@ -69,7 +69,7 @@ public class GenSchemeController extends BaseController {
 
     @RequestMapping(value = "delete")
     public String delete(GenScheme genScheme) {
-        genSchemeService.deleteLogic(genScheme.getId());
+        genSchemeService.delete(genScheme.getId(), true);
         return "redirect:/admin/gen/genScheme/";
     }
 

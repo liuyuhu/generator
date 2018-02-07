@@ -40,5 +40,27 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>localhost</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <jdbc.url>localhost</jdbc.url>
+                <jdbc.name>root</jdbc.name>
+                <jdbc.password>root</jdbc.password>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>test</id>
+        </profile>
+
+        <profile>
+            <id>product</id>
+        </profile>
+    </profiles>
+
 
 </project>

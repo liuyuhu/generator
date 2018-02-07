@@ -1,4 +1,4 @@
-package com.generator.interceptor;
+package com.generator.common.interceptor;
 
 import com.generator.common.entity.Page;
 import com.generator.common.utils.Reflections;

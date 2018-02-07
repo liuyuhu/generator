@@ -7,9 +7,9 @@ import com.generator.usertest.service.UserTestService;
 import org.springframework.stereotype.Service;
 
 /**
- * 生成功能描述:ServiceImpl
+ * 用户信息ServiceImpl
  * @author liuyuhu
- * @version 2018-01-26
+ * @version 2018-02-07
  */
 
 @Service

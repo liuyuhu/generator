@@ -8,11 +8,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${packageName}.${moduleName}.dao<#if subModuleName != "">.${subModuleName}</#if>.${ClassName}Dao">
 
+	<resultMap id="BaseResultMap" type="${packageName}.${moduleName}.entity<#if subModuleName != "">.${subModuleName}</#if>.${ClassName}">
+    	<#list table.columnList as c>
+	<#if c.isPk == "1">
+		<id column="${c.name}" property="${c.javaFieldId}" />
+	<#else>
+		<result column="${c.name}" property="${c.javaFieldId}" />
+	</#if>
+		</#list>
+  	</resultMap>
+
+    <#-- 输出字段列 -->
+	<sql id="Base_Column_List">
+<#assign columnField>
+<#list table.columnList as c>
+		${c.name},
+</#list>
+	</#assign>
+${columnField?substring(0, columnField?last_index_of(","))}
+	</sql>
+
 	<select id="get" resultMap="BaseResultMap">
 		SELECT 
 			<include refid="Base_Column_List"/>
 		FROM ${table.name}
-		WHERE id = ${"#"}{id}
+	<#list table.columnList as c>
+	<#if c.isPk == "1">
+		WHERE ${c.name} = ${"#"}{id}
+	</#if>
+	<#break>
+	</#list>
 	</select>
 	
 	<select id="list" resultMap="BaseResultMap">
@@ -46,6 +71,11 @@
 				</#if>
 			</#list>
 		</where>
+		<#if table.createDateExists>
+		ORDER BY t.create_time ASC
+		<#elseif table.updateDateExists>
+		ORDER BY t.update_time DESC
+		</#if>
 	</select>
 
 	<select id="listPage" resultMap="BaseResultMap" parameterType="Page">
@@ -86,50 +116,13 @@
 				ORDER BY ${"$"}{orderBy}
 			</when>
 			<otherwise>
-				<#if table.parentExists>
-					<#if table.createDateExists>
+				<#if table.createDateExists>
 				ORDER BY t.create_time ASC
-					</#if>
-				<#else>
-					<#if table.updateDateExists>
+				<#elseif table.updateDateExists>
 				ORDER BY t.update_time DESC
-					</#if>
 				</#if>
 			</otherwise>
 		</choose>
-	</select>
-	
-	<select id="listAll" resultMap="BaseResultMap">
-		SELECT 
-			<include refid="Base_Column_List"/>
-		FROM ${table.name} t
-		<where>
-			<#if table.delFlagExists>t.valid = 1</#if>
-			<#list table.columnList as c>
-				<#if (c.isQuery?? && c.isQuery == "1") || (table.parentExists && table.parentTableFk == c.name)>
-					<#if c.queryType ?? && c.queryType == 'between'>
-			<if test="begin${c.simpleJavaField?cap_first} != null and end${c.simpleJavaField?cap_first} != null <#if c.simpleJavaField != c.javaFieldId>and begin${c.javaFieldId?cap_first} != null and end${c.javaFieldId?cap_first} != null </#if>and begin${c.javaFieldId?cap_first} != '' and end${c.javaFieldId?cap_first} != ''">
-					<#else>
-			<if test="${c.simpleJavaField} != null<#if c.simpleJavaField != c.javaFieldId> and ${c.javaFieldId} != null</#if> and ${c.javaFieldId} != ''">
-					</#if>
-					<#if c.queryType ?? && c.queryType == 'between'>
-				AND t.${c.name} BETWEEN ${"#"}{begin${c.simpleJavaField?cap_first}} AND ${"#"}{end${c.simpleJavaField?cap_first}}
-					<#elseif c.queryType ?? && c.queryType == 'like'>
-				AND t.${c.name} LIKE
-					concat('%',${"#"}{${c.javaFieldId}},'%')
-					<#elseif c.queryType ?? && c.queryType == 'left_like'>
-				AND t.${c.name} LIKE
-					concat('%',${"#"}{${c.javaFieldId}})
-					<#elseif c.queryType ?? && c.queryType == 'right_like'>
-				AND t.${c.name} LIKE
-					concat(${"#"}{${c.javaFieldId}},'%')
-					<#else>
-				AND t.${c.name} ${c.queryType} ${"#"}{${c.javaFieldId}}
-					</#if>
-			</if>
-				</#if>
-			</#list>
-		</where>
 	</select>
 	
 	<insert id="save">
@@ -155,7 +148,8 @@ ${insertJavaField?substring(0, insertJavaField?last_index_of(","))}
 	</insert>
 	
 	<update id="update">
-		UPDATE ${table.name} SET 	
+		UPDATE ${table.name}
+		<set>
 				<#list table.columnList as c>
 					<#if c.isEdit?? && c.isEdit == "1">
 			<if test="${c.javaFieldId} != null">
@@ -163,19 +157,54 @@ ${insertJavaField?substring(0, insertJavaField?last_index_of(","))}
 			</if>
 					</#if>
 				</#list>
-		WHERE id = ${"#"}{id}
-	</update>
-
-	<#if table.delFlagExists>
-	<update id="deleteLogic">
-		UPDATE ${table.name} SET
-		valid = 0
-	</update>
-
+		</set>
+		<#list table.columnList as c>
+	<#if c.isPk == "1">
+		WHERE ${c.name} = ${"#"}{${c.javaFieldId}}
 	</#if>
-	<delete id="delete">
-		DELETE FROM ${table.name}
-		WHERE id = ${"#"}{id}
+	<#break>
+	</#list>
+	</update>
+
+	<update id="updateAll">
+		UPDATE ${table.name}
+		<set>
+				<#list table.columnList as c>
+					<#if c.isEdit?? && c.isEdit == "1">
+				${c.name} = ${"#"}{${c.javaFieldId}},
+					</#if>
+				</#list>
+		</set>
+		<#list table.columnList as c>
+	<#if c.isPk == "1">
+		WHERE ${c.name} = ${"#"}{${c.javaFieldId}}
+	</#if>
+	<#break>
+	</#list>
+	</update>
+
+	<delete id="delete" parameterType="java.lang.Boolean">
+	<choose>
+		<when test="logic">
+			UPDATE ${table.name}
+			SET valid = "0"
+		<#list table.columnList as c>
+		<#if c.isPk == "1">
+			WHERE ${c.name} = ${"#"}{id}
+		</#if>
+		<#break>
+		</#list>
+		</when>
+		<otherwise>
+			DELETE FROM ${table.name}
+		<#list table.columnList as c>
+		<#if c.isPk == "1">
+			WHERE ${c.name} = ${"#"}{id}
+		</#if>
+		<#break>
+		</#list>
+		</otherwise>
+	</choose>
 	</delete>
 
 </mapper>]]>

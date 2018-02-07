@@ -61,7 +61,7 @@ public class GenTemplateController extends BaseController {
 
     @RequestMapping(value = "delete")
     public String delete(GenTemplate genTemplate) {
-        genTemplateService.deleteLogic(genTemplate.getId());
+        genTemplateService.delete(genTemplate.getId(), true);
         return "redirect:" + adminPath + "/gen/genTemplate/?repage";
     }
 

@@ -87,9 +87,18 @@
         WHERE id = #{id}
     </update>
 
-    <delete id="delete">
-        DELETE FROM t_user
-        WHERE id = #{id}
+    <delete id="delete" parameterType="java.lang.Boolean">
+        <choose>
+            <when test="logic">
+                UPDATE t_user SET
+                name = "test111"
+                WHERE id = #{id}
+            </when>
+            <otherwise>
+                DELETE FROM t_user
+                WHERE id = #{id}
+            </otherwise>
+        </choose>
     </delete>
 
 </mapper>

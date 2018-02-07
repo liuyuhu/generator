@@ -1,4 +1,4 @@
-package com.generator.interceptor;
+package com.generator.common.interceptor;
 
 import org.apache.ibatis.plugin.Interceptor;
 

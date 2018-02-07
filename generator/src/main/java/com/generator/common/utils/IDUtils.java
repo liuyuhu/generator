@@ -76,4 +76,10 @@ public class IDUtils {
         String str = String.format("%04d", end4);
         return data + millis + str;
     }
+
+    public static void main(String[] args) {
+        String s = genImageName();
+        System.out.println(s);
+        System.out.println(1000*60*60*24*1*365*10);
+    }
 }

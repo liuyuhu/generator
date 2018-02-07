@@ -8,7 +8,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${packageName}.${moduleName}.dao<#if subModuleName != "">.${subModuleName}</#if>.${ClassName}Dao">
 
-    <resultMap id="BaseResultMap" type="${packageName}.${moduleName}.entity<#if subModuleName != "">.${subModuleName}</#if>.${ClassName}">
+    <resultMap id="ResultMap" type="${packageName}.${moduleName}.entity<#if subModuleName != "">.${subModuleName}</#if>.${ClassName}">
     	<#list table.columnList as c>
 	<#if c.isPk == "1">
 		<id column="${c.name}" property="${c.javaFieldId}" />
@@ -19,7 +19,7 @@
   	</resultMap>
 
     <#-- 输出字段列 -->
-	<sql id="Base_Column_List">
+	<sql id="Column_List">
 <#assign columnField>
 <#list table.columnList as c>
 		${c.name},
@@ -29,7 +29,7 @@ ${columnField?substring(0, columnField?last_index_of(","))}
 	</sql>
 	
 	<#-- 输出字段关联表 -->
-	<sql id="Base_Column_List_T">
+	<sql id="Column_List_T">
 	<#assign columnFieldT>
 		<#list table.columnList as c>
 		t.${c.name},

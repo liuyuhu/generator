@@ -22,7 +22,9 @@ import java.util.UUID;
 /**
  * @author generator
  * @date 2018/1/16  16:43
- */
+ * */
+
+
 @Controller
 public class TestController {
 
@@ -39,14 +41,54 @@ public class TestController {
 
     @RequestMapping("/test")
     @ResponseBody
-    public String test(GenScheme genScheme) {
-        genScheme.setCreateTime(new Date());
-        genScheme.setUpdateTime(new Date());
-        genSchemeService.saveOrUpdate(genScheme);
-        return "redirect:/admin/gen/genScheme/?repage";
+    public Object test(GenScheme genScheme) {
+        Date date = new Date();
+//        genScheme.setCreateTime(new Date());
+//        genScheme.setUpdateTime(new Date());
+//        genSchemeService.saveOrUpdate(genScheme);
+//
+//        userService.delete("05e16c15-6c7b-4f88-a94d-93ee4b0d044b", true);
+//        UserTest userTest = new UserTest().setAge(1).setUserId(IDUtils.UUID())
+//                .setUserName("aaaa");
+//        userTest.setCreateTime(date);
+//        userTest.setUpdateTime(date);
+//        userTest.setValid(1);
+//        userTestService.save(userTest);
+//
+//for (int i = 0; i < 100; i++) {
+//            UserTest user = new UserTest();
+//            user.setId(IDUtils.UUID());
+//            user.setUserName("test" + i);
+//            user.setAge(i);
+//            user.setUpdateTime(date);
+//            user.setCreateTime(date);
+//            userTestService.save(user);
+//        }
+//
+//        UserTest userTest = userTestService.get("00b2757fdf9a4a7ea996003168eb6cf8");
+//        UserTest userTest = userTestService.get(new UserTest().setUserName("11"));
+//        List<UserTest> list = userTestService.list(null);
+//        List<UserTest> list = userTestService.list(new UserTest().setUserName("1"));
+//        List list = userTestService.listPage(new Page().setPageNo(2));
+//        Page page = new Page(new UserTest().setUserName("1"));
+//        List<UserTest> userTests = userTestService.listPage(page);
+//        page.setResult(userTests);
+
+//        UserTest userTest = userTestService.get("00b2757fdf9a4a7ea996003168eb6cf8");
+//        userTest.setUserName("ccc");
+//        userTestService.update(userTest);
+//
+//        UserTest userTest = new UserTest().setUserId("00b2757fdf9a4a7ea996003168eb6cf8")
+//                .setUserName("ddd").setAge(100);
+//        userTestService.updateAll(userTest);
+//
+//        userTestService.delete("00b2757fdf9a4a7ea996003168eb6cf8", false);
+//        userTestService.delete("1c904af02c2247819544d7113b373afb", true);
+//        UserTest userTest = userTestService.getByName("test11");
+        return SUCCESS;
     }
 
-    @RequestMapping("/usertest/save")
+/*@RequestMapping("/usertest/save")
     @ResponseBody
     public String userTest(UserTest user) {
         Date date = new Date();
@@ -59,9 +101,10 @@ public class TestController {
             userTestService.save(user);
         }
         return SUCCESS;
-    }
+    }*/
 
-    @RequestMapping("/usertest/list")
+
+ @RequestMapping("/usertest/list")
     @ResponseBody
     public Object userTestList(Page page, UserTest user) {
         page.setCondition(user);
@@ -69,6 +112,7 @@ public class TestController {
         page.setResult(userList);
         return page;
     }
+
 
     @RequestMapping("/user/name")
     @ResponseBody

@@ -5,9 +5,9 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * 生成功能描述:Entity
+ * 用户信息Entity
  * @author liuyuhu
- * @version 2018-01-26
+ * @version 2018-02-07
  */
 
 @Data
@@ -16,7 +16,7 @@ public class UserTest extends BaseEntity {
     /**
      * 主键id
      */ 
-    private String id;
+    private String userId;
     /**
      * 用户名称
      */ 

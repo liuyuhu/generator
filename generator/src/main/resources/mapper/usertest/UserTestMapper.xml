@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.generator.usertest.dao.UserTestDao">
 
-    <resultMap id="BaseResultMap" type="com.generator.usertest.entity.UserTest">
-		<id column="id" property="id" />
+    <resultMap id="ResultMap" type="com.generator.usertest.entity.UserTest">
+		<id column="user_id" property="userId" />
 		<result column="user_name" property="userName" />
 		<result column="age" property="age" />
 		<result column="create_time" property="createTime" />
@@ -11,8 +11,8 @@
 		<result column="valid" property="valid" />
   	</resultMap>
 
-	<sql id="Base_Column_List">
-		id,
+	<sql id="Column_List">
+		user_id,
 		user_name,
 		age,
 		create_time,
@@ -20,8 +20,8 @@
 		valid
 	</sql>
 	
-	<sql id="Base_Column_List_T">
-		t.id,
+	<sql id="Column_List_T">
+		t.user_id,
 		t.user_name,
 		t.age,
 		t.create_time,

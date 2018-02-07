@@ -16,6 +16,14 @@ public interface BaseService<T> {
     T get(String id);
 
     /**
+     * 获取单条数据
+     *
+     * @param entity
+     * @return
+     */
+    T get(T entity);
+
+    /**
      * 获取多条数据
      *
      * @param entity
@@ -30,14 +38,6 @@ public interface BaseService<T> {
      * @return
      */
     List<T> listPage(Page page);
-
-    /**
-     * 查询所有数据列表
-     *
-     * @param entity
-     * @return
-     */
-    List<T> listAll(T entity);
 
     /**
      * 插入数据
@@ -64,20 +64,13 @@ public interface BaseService<T> {
     int updateAll(T entity);
 
     /**
-     * 删除数据（物理删除）
+     * 删除数据（物理删除 false）
      *
      * @param id
+     * @param logic
      * @return
      * @see public int delete(T entity)
      */
-    @Deprecated
-    int delete(String id);
+    int delete(String id, Boolean logic);
 
-    /**
-     * 删除数据（逻辑删除，更新valid字段为1）
-     *
-     * @param id
-     * @return
-     */
-    int deleteLogic(String id);
 }

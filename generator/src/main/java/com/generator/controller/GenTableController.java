@@ -76,7 +76,7 @@ public class GenTableController extends BaseController {
 
     @RequestMapping(value = "delete")
     public String delete(GenTable genTable) {
-        genTableService.delete(genTable.getId());
+        genTableService.delete(genTable.getId(), false);
         return "redirect:/admin/gen/genTable/?repage";
     }
 

@@ -168,7 +168,7 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableDao, GenTable> 
 
     @Override
     public void deleteColumn(GenTable genTable) {
-        genTableDao.deleteLogic(genTable.getId());
+        genTableDao.delete(genTable.getId(), true);
         genTableColumnDao.deleteByGenTableId(genTable.getId());
     }
 
