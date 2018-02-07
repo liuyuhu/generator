@@ -254,7 +254,7 @@ INSERT INTO `t_user` VALUES ('f6a15f87-f9f5-4282-b9ae-0d54ce52f7df', 'test39', '
 -- ----------------------------
 DROP TABLE IF EXISTS `user_test`;
 CREATE TABLE `user_test` (
-  `id` varchar(32) NOT NULL COMMENT '主键id',
+  `user_id` varchar(32) NOT NULL COMMENT '主键id',
   `user_name` varchar(255) DEFAULT NULL COMMENT '用户名称',
   `age` int(11) DEFAULT NULL COMMENT '用户年龄',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
